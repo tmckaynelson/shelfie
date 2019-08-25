@@ -26,7 +26,51 @@ const getProducts = (req, res) => {
     })
 }
 
+const deleteProduct = (req, res) => {
+
+    const { id } = req.params
+
+    const db = req.app.get('db')
+    db.delete_product([id]).then( resonse =>{
+        res.status(200).send()
+    })
+    .catch( error => {
+        console.log(error)
+    })
+}
+
+const getProduct = (req, res) => {
+
+    const { id } = req.params
+
+    const db = req.app.get('db')
+    db.get_product([id]).then( response => {
+        res.status(200).send(response)
+    })
+    .catch( error => {
+        console.log(error)
+    })
+}
+
+const editProduct = (req, res) => {
+
+    const { id } = req.params
+
+    const { name, price, imgUrl } = req.body
+
+    const db = req.app.get('db')
+    db.edit_product([name, price, imgUrl, id]).then( response => {
+        res.status(200).send()
+    })
+    .catch( error => {
+        console.log(error)
+    })
+}
+
 module.exports = {
     addProduct,
-    getProducts
+    getProducts,
+    deleteProduct,
+    getProduct,
+    editProduct
 }

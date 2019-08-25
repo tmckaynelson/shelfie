@@ -29,6 +29,9 @@ massive(CONNECTION_STRING).then(dbInstance => {
 
 app.post('/api/product', productCtrl.addProduct)
 app.get('/api/inventory', productCtrl.getProducts)
+app.get('/api/product/:id', productCtrl.getProduct)
+app.delete('/api/product/:id', productCtrl.deleteProduct)
+app.put('/api/product/:id', productCtrl.editProduct)
 
 
 // server is listening

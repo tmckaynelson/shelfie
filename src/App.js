@@ -16,12 +16,17 @@ class App extends React.Component {
     super()
 
     this.state = {
-      inventory: []
+      inventory: [],
+      currentEdit: null
     }
   }
 
   componentDidMount = () => {
     
+    this.getAll()
+  }
+
+  getAll = () => {
     axios.get('/api/inventory')
     .then( response => {
       this.setState({
@@ -33,14 +38,21 @@ class App extends React.Component {
     })
   }
 
+  setEdit = (id) => {
+    console.log('set id')
+    this.setState({
+      currentEdit: id
+    })
+  }
+
   render() {
 
     return (
       <div className="app">
         <Header />
         <div className="container">
-          <Dashboard products={ this.state.inventory } />
-          <Form />
+          <Dashboard products={ this.state.inventory } get={ this.getAll } setEdit={ this.setEdit } />
+          <Form get={ this.getAll } currentEdit={ this.state.currentEdit } />
         </div>
       </div>
     )
