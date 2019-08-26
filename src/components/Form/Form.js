@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
+import { Link } from 'react-router-dom'
 
 import './Form.css'
 
@@ -19,13 +20,11 @@ export default class Form extends Component {
     }
 
     cancel = (event) => {
-        event.preventDefault()
 
         this.clearInput()
     }
 
-    add = (event) => {
-        event.preventDefault()
+    add = () => {
 
         if (!this.state.imgUrl) this.setState({ imgUrl: this.defaultImg })
 
@@ -40,7 +39,6 @@ export default class Form extends Component {
         if (this.state.edit) {
             axios.put(`/api/product/${this.state.currentEdit}`, body)
             .then( response => {
-                this.props.get()
             })
             .catch( error => {
                 console.log(error)
@@ -49,7 +47,6 @@ export default class Form extends Component {
         else {
             axios.post('/api/product', body)
             .then( response => {
-                this.props.get()
             })
             .catch( error => {
                 console.log(error)
@@ -57,7 +54,6 @@ export default class Form extends Component {
         }
 
         this.clearInput()
-        this.props.get()
     }
 
     clearInput = () => {
@@ -70,26 +66,19 @@ export default class Form extends Component {
         })
     }
 
-    componentDidUpdate = (prevProps) => {
-        if (prevProps.currentEdit !== this.props.currentEdit) {
+    componentDidMount = () => {
 
-            if (this.props.currentEdit === null) {
-                this.setState({
-                    currentEdit: null,
-                    edit: false,
-                    name: '',
-                    price: '',
-                    imgUrl: ''
-                })
-            }
-            else {
-                axios.get(`/api/product/${this.props.currentEdit}`).then( response => {
-                    this.setState({ ...response.data[0], currentEdit: response.data[0].id, edit:true })
+        if(this.props.match.path.startsWith('/edit')) {
+
+            console.log('hit when edit')
+            let { id } = this.props.match.params
+
+            axios.get(`/api/product/${id}`).then( response => {
+                    this.setState({ ...response.data[0], edit:true, currentEdit: id, imgUrl: response.data[0].img})
                 })
                 .catch( error => {
                     console.log(error)
                 })
-            }
         }
     }
 
@@ -105,8 +94,8 @@ export default class Form extends Component {
                 <label>Price:</label>
                 <input type="text" value={ this.state.price } onChange={ event => { this.setState({ price: event.target.value }) } } />                
                 <div>
-                    <button onClick={ this.cancel }>Cancel</button>
-                    <button onClick={ this.add }>{ this.state.edit? 'Save Changes' : 'Add to Inventory' }</button>
+                    <Link to='/' onClick={ this.cancel }>Cancel</Link>
+                    <Link to='/' onClick={ this.add }>{ this.state.edit? 'Save Changes' : 'Add to Inventory' }</Link>
                 </div>
             </div>
         )

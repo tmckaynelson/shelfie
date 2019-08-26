@@ -40,6 +40,7 @@ const deleteProduct = (req, res) => {
 }
 
 const getProduct = (req, res) => {
+    console.log('hit get one')
 
     const { id } = req.params
 
